@@ -1,0 +1,72 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+body{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: Tahoma, Verdana, sans-serif;
+}
+.game{
+	display: block;
+	margin-top: 50px;
+	width: 500px;
+}
+.field{
+	position: relative;
+}
+.field__container{
+	margin-left: 40px;
+	display: grid;
+	grid-template-columns: repeat(10,40px);
+	grid-template-rows: repeat(10,40px);
+	border-collapse: collapse;
+}
+.field_cell{
+	position:relative;
+	border: 1px solid rgba(0,0,0, 0.5);
+}
+.field_cell,.words_cell,.numbers_cell{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	width: 40px;
+	height: 40px;
+	
+}	
+.words{
+	display: flex;
+	margin-left: 40px;
+}
+.words_cell,.numbers_cell{
+	color: #729ee6;
+}
+.numbers{
+	position: absolute;
+	left: 0;
+	top: 40px;
+	flex-direction: none;
+}
+
+.ship{
+	position:absolute;
+	left: -2px;
+	top: -1px;
+	width: 42px;
+	height: 42px;
+	box-sizing: border-box;
+	border: 2px solid red;
+	background: rgba(66,135,245, 0.5);
+	z-index: 2;
+}
+/* .ship_lenght4{
+	width: 160px;
+} */
+/* .ship{
+	width: 42px;
+	height: 42px;
+	border: 3px solid red;
+	background: 
+} */

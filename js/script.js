@@ -5,10 +5,14 @@ let field_own = [],
 	field_opponent = [],
 	availableFields = [],
 	memberPositions = [],
+	pushCells = [],
+	shipsOpponent = [],
+	currentGamer = 0,
+	counterKillOwn = 0,
+	counterKillOpponent = 0,
 	number = 10;
 	
 
-	
 startGame();
 
 function startGame(){
@@ -28,13 +32,137 @@ function startGame(){
 	document.querySelectorAll('.game__own .field__cell').forEach(cell => {
 		cell.innerHTML = '';
 	})
-	createShip();
+	createShips();
+	addClick();
+	initialization();
+
 	/*setInterval(function(){
 		bot();
 	},10);*/
 }
 
-function createShip(){
+function addClick(){
+	document.querySelector('.game__opponent .field__container').addEventListener('click', clickController)
+}
+
+function clickController(event){
+	if (currentGamer !== 0) {
+		return;
+	}
+	//let cell = event.target.closest('.field__cell');
+	let cell = event.target;
+
+	if (!cell) {
+		return false;
+	}
+	let position = 0;
+	while (cell.previousSibling) {
+	    cell = cell.previousSibling;
+	    if ( cell.nodeType === 1) {
+	        position++;
+	    }   
+	}
+
+
+	if (pushCells.indexOf(position) === -1) {
+		pushCells.push(position);
+		checking(position);
+	}else{
+		console.log('тут');
+		return;
+	}
+	
+}
+
+
+function checking(position){
+	let y = Math.trunc(position / number);
+	let x = position % number;
+	if (field_opponent[y][x] === 1 || field_opponent[y][x] === 2) {
+		let fieldCell = document.querySelectorAll('.game__opponent .field__cell');
+		fieldCell[position].style.background = '#000000';
+		currentGamer = 1;
+		bot();
+	}
+	//если ранил или убил
+	if (field_opponent[y][x] === 3) {
+		field_opponent[y][x] = -3;
+		// определяем убил или ранил
+		for (let i = 0; i < shipsOpponent.length; i++){
+			for (let j = 0; j < shipsOpponent[i].length - 1; j += 2){
+				if (shipsOpponent[i][j] === x && shipsOpponent[i][j+1] === y) {
+					shipsOpponent[i][j] = x.toString();
+					shipsOpponent[i][j+1] = y.toString();
+					determineStateShip1(shipsOpponent[i], x, y);
+					return;
+				}
+			}
+		}
+	}
+}
+
+
+function determineStateShip1(ships,x,y){
+	let destroyShip = true; 
+	for (let i = 0; i < ships.length; i++){
+		if (typeof(ships[i]) === 'number') {
+			destroyShip = false;
+			break;
+		}
+	}
+
+	let position = 10*y + x;
+	console.log("position", position);
+	let fieldCell = document.querySelectorAll('.game__opponent .field__cell'); 
+
+	if (destroyShip === true) {
+		fieldCell[position].innerHTML = 'y';
+		fieldCell[position].style.background = '#ff0000';
+		func(ships);
+		counterKillOpponent++
+		checkGameOver();
+		console.log('убил');
+	}else{
+		fieldCell[position].innerHTML = 'р';
+		fieldCell[position].style.background = '#e9f542';
+		console.log('ранил');
+	}
+}
+
+function func(ships){
+	for (let index = 0; index < ships.length; index += 2){
+		let x = Number(ships[index]);
+		let y = Number(ships[index+1]);
+		let position = 10*y + x;
+		document.querySelectorAll('.game__opponent .field__cell')[position].style.background = '#ff0000';
+		for (let i = -1; i <= 1 ;i++){
+			for (let j = -1; j <= 1; j++){
+				console.log("x+i, y+j", x+i, y+j);
+				if (x+i >= 0 && x+i < number && y+j >= 0 && y+j < number && field_opponent[y+j][x+i] !== -3){
+					let boderPosition = 10*(y+j) + (x+i); 
+					if (pushCells.indexOf(boderPosition) === -1) {
+						pushCells.push(boderPosition);
+					}
+					document.querySelectorAll('.game__opponent .field__cell')[boderPosition].style.background = '#ab95f5';
+				}
+			}
+		}
+	}
+}
+
+function checkGameOver(){
+	if (counterKillOpponent === 10 || counterKillOwn === 10) {
+		currentGamer = -1;
+		alert('Конец игры');
+	}
+}
+
+function initialization(){
+
+}
+
+
+function createShips(){
 
 
 	let ships = [4,3,3,2,2,2,1,1,1,1];
@@ -42,9 +170,9 @@ function createShip(){
 		field_own = ranking(field_own, ships[i], 1);
 		field_opponent = ranking(field_opponent, ships[i], 2);
 	}
-	for (let i = 0; i < ships.length; i++){
+	/*for (let i = 0; i < ships.length; i++){
 		
-	}
+	}*/
 
 }
 
@@ -58,7 +186,8 @@ function ranking(field, line, chooseField){
 			position = Math.floor(Math.random() * 2),
 			column = Math.trunc(cell / number),
 			row = cell % number,
-			rightPosition = true;
+			rightPosition = true,
+			tempShipsOpponent = [];
 
 		if (position === 0) {
 			for (let i = 0; i < line; i++){
@@ -70,12 +199,19 @@ function ranking(field, line, chooseField){
 			if (rightPosition === true) {
 				for (let i = 0; i < line; i++){
 					field[column][row+i] = 3;
+					if (chooseField === 2) {
+						tempShipsOpponent.push(row + i, column);
+					}
 				}
 				field = createBorder(field, column,row,position,line);
 				renderShip(cell, position, line, chooseField);
 				/*if (chooseField === 1) {
 					
 				}*/
+				if (chooseField === 2) {
+					shipsOpponent.push(tempShipsOpponent);
+				}
+				
 				break;
 			}
 		}else{
@@ -88,12 +224,18 @@ function ranking(field, line, chooseField){
 			if (rightPosition === true) {
 				for (let i = 0; i < line; i++){
 					field[column+i][row] = 3;
+					if (chooseField === 2) {
+						tempShipsOpponent.push(row, column + i);
+					}
 				}
 				field = createBorder(field, column,row,position,line);
 				renderShip(cell, position, line, chooseField);
 				/*if (chooseField === 1) {
 					
 				}*/
+				if (chooseField === 2) {
+					shipsOpponent.push(tempShipsOpponent);
+				}
 				break;
 			}
 		}
@@ -144,6 +286,7 @@ function renderShip(cell, position, line, chooseField){
 	if (chooseField === 1) {
 		fieldCell = document.querySelectorAll('.game__own .field__cell');
 	}else{
+		return
 		fieldCell = document.querySelectorAll('.game__opponent .field__cell');
 	}
 	
@@ -166,43 +309,50 @@ function randomPosition(array){
 }
 
 function bot(){
-	if (availableFields.length === 0) {
-		console.log('Нету свободных ячеек');
-		return;
-	}
+	setTimeout(function(){
+		if (currentGamer !== 1) {
+			return;
+		}
+		if (availableFields.length === 0) {
+			console.log('Нету свободных ячеек');
+			return;
+		}
 
-	let position = randomPosition(availableFields), //рандомная позиция в массиве availableFields
-		cell = availableFields[position]; // номер ячейки
-		column = Math.trunc(cell / number), // y - ячейки
-		row = cell % number; // x - ячейки
+		let position = randomPosition(availableFields), //рандомная позиция в массиве availableFields
+			cell = availableFields[position]; // номер ячейки
+			column = Math.trunc(cell / number), // y - ячейки
+			row = cell % number; // x - ячейки
 
-	if (memberPositions.length) {
-		let result = possibleSolution(); // возвращает x, y ячейки
-		let random = randomPosition(result);
-		row = result[random][0]; // x - ячейки
-		column = result[random][1]; // y - ячейки
-		cell = result[random][1]*10 + result[random][0]; // 
-		position = availableFields.indexOf(cell); // позиция в массиве availableFields
-	}
+		if (memberPositions.length) {
+			let result = possibleSolution(); // возвращает x, y ячейки
+			let random = randomPosition(result);
+			row = result[random][0]; // x - ячейки
+			column = result[random][1]; // y - ячейки
+			cell = result[random][1]*10 + result[random][0]; // 
+			position = availableFields.indexOf(cell); // позиция в массиве availableFields
+		}
 
-	//удаляем эту ячейку
-	availableFields.splice(position, 1);
+		//удаляем эту ячейку
+		availableFields.splice(position, 1);
 
-	//если выстрел мимо
-	if (field_own[column][row] === 1 || field_own[column][row] === 2) {
-		let fieldCell = document.querySelectorAll('.game__own .field__cell');
-		fieldCell[cell].style.background = '#000000';
-		return;
-	}
-	//если ранил или убил
-	if (field_own[column][row] === 3) {
-		field_own[column][row] = -3;
-		// запоминаем ячейку
-		memberPositions.push({y: column, x: row});
-		// определяем убил или ранил
-		determineStateShip(row, column);
-		return;
-	}
+		//если выстрел мимо
+		if (field_own[column][row] === 1 || field_own[column][row] === 2) {
+			let fieldCell = document.querySelectorAll('.game__own .field__cell');
+			fieldCell[cell].style.background = '#000000';
+			currentGamer = 0;
+			return;
+		}
+		//если ранил или убил
+		if (field_own[column][row] === 3) {
+			field_own[column][row] = -3;
+			// запоминаем ячейку
+			memberPositions.push({y: column, x: row});
+			// определяем убил или ранил
+			determineStateShip(row, column);
+			bot();
+			return;
+		}
+	},1000)
 
 }
 
@@ -281,6 +431,8 @@ function determineStateShip(x,y){
 		fieldCell[cell].innerHTML = 'у';
 		freezeBorder();
 		memberPositions = [];	
+		counterKillOwn++;
+		checkGameOver();
 		console.log('убил');
 		return true;
 	}else{
@@ -304,9 +456,9 @@ function deleteField(x,y){
 
 
 function freezeBorder(){
-	for (let i = 0; i < memberPositions.length; i++){
-		let x = memberPositions[i].x;
-		let y = memberPositions[i].y;
+	for (let index = 0; index < memberPositions.length; index++){
+		let x = memberPositions[index].x;
+		let y = memberPositions[index].y;
 
 		for (let i = -1; i <= 1 ;i++){
 			for (let j = -1; j <= 1; j++){

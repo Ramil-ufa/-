@@ -3,15 +3,18 @@
 	padding: 0;
 }
 body{
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	display: block;
 	font-family: Tahoma, Verdana, sans-serif;
 }
 .game{
-	display: block;
-	margin-top: 50px;
-	width: 500px;
+	display: flex;
+	justify-content: space-between;
+	margin: 50px auto;
+	padding: 20px;
+	width: 1000px;
+}
+.game__own, .game__opponent{
+	
 }
 .field{
 	position: relative;
@@ -23,11 +26,11 @@ body{
 	grid-template-rows: repeat(10,40px);
 	border-collapse: collapse;
 }
-.field_cell{
+.field__cell{
 	position:relative;
-	border: 1px solid rgba(0,0,0, 0.5);
+	border: 1px solid rgba(114, 158, 230, 0.5);
 }
-.field_cell,.words_cell,.numbers_cell{
+.field__cell,.words__cell,.numbers__cell{
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -39,9 +42,6 @@ body{
 .words{
 	display: flex;
 	margin-left: 40px;
-}
-.words_cell,.numbers_cell{
-	color: #729ee6;
 }
 .numbers{
 	position: absolute;
@@ -61,12 +61,19 @@ body{
 	background: rgba(66,135,245, 0.5);
 	z-index: 2;
 }
-/* .ship_lenght4{
-	width: 160px;
-} */
-/* .ship{
-	width: 42px;
-	height: 42px;
-	border: 3px solid red;
-	background: 
-} */
+.hit{
+	display: inline-block;
+	width: 30px;
+	height: 30px;  
+	color: #ff0000;
+	font-weight: bold;
+	z-index: 3;
+}
+.hit__cross{
+	width: 30px;
+	height: 30px;
+	fill:  #ff0000;
+	enable-background:new 0 0 30 30; 
+	fill: #ff0000;
+}
+

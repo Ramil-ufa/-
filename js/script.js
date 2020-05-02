@@ -1,56 +1,63 @@
 //растановка кораблей
 `use strict`;
 
-let field = [],
+let field_own = [],
+	field_opponent = [],
 	availableFields = [],
-	number = 10,
-	counter = 0;
-	memberPositions = [];
-
+	memberPositions = [],
+	number = 10;
 	
+
 	
 startGame();
 
 function startGame(){
-	field = [];
+	field_own = [];
+	field_opponent = [];
 	for (let i = 0; i < number; i++){
-		field[i] = [];
+		field_own[i] = [];
+		field_opponent[i] = [];
 		for (let j = 0; j < number; j++){
-			field[i][j] = 1;
+			field_own[i][j] = 1;
+			field_opponent[i][j] = 1;
 		}
 	}
 	for (let i = 0; i < number*number; i++){
 		availableFields[i] = i;
 	}
-
-	document.querySelectorAll('.field_cell').forEach(cell => {
+	document.querySelectorAll('.game__own .field__cell').forEach(cell => {
 		cell.innerHTML = '';
 	})
-	ranking(4);
-	ranking(3);
-	ranking(3);
-	ranking(2);
-	ranking(2);
-	ranking(2);
-	ranking(1);
-	ranking(1);
-	ranking(1);
-	ranking(1);
-	/*let timer = setInterval(function(){
+	createShip();
+	/*setInterval(function(){
 		bot();
-	},100)*/
+	},10);*/
+}
+
+function createShip(){
+
+
+	let ships = [4,3,3,2,2,2,1,1,1,1];
+	for (let i = 0; i < ships.length; i++){
+		field_own = ranking(field_own, ships[i], 1);
+		field_opponent = ranking(field_opponent, ships[i], 2);
+	}
+	for (let i = 0; i < ships.length; i++){
+		
+	}
+
 }
 
 
 
-function ranking(line){
+function ranking(field, line, chooseField){
 	while(true){
 		// 0 - горизонтально
 		// 1 - вертикально
 		let cell = Math.floor(Math.random() * number*number),
-			position = Math.floor(Math.random() * 2);
-			column = Math.trunc(cell / number);
-			row = cell % number;
+			position = Math.floor(Math.random() * 2),
+			column = Math.trunc(cell / number),
+			row = cell % number,
 			rightPosition = true;
 
 		if (position === 0) {
@@ -64,8 +71,11 @@ function ranking(line){
 				for (let i = 0; i < line; i++){
 					field[column][row+i] = 3;
 				}
-				createBorder(column,row,position,line);
-				renderShip(cell, position, line);
+				field = createBorder(field, column,row,position,line);
+				renderShip(cell, position, line, chooseField);
+				/*if (chooseField === 1) {
+					
+				}*/
 				break;
 			}
 		}else{
@@ -79,22 +89,19 @@ function ranking(line){
 				for (let i = 0; i < line; i++){
 					field[column+i][row] = 3;
 				}
-				createBorder(column,row,position,line);
-				renderShip(cell, position, line);
+				field = createBorder(field, column,row,position,line);
+				renderShip(cell, position, line, chooseField);
+				/*if (chooseField === 1) {
+					
+				}*/
 				break;
 			}
 		}
-
-		
-		counter++;
-		if (counter > 100) {
-			startGame();
-			break;
-		}
 	}
+	return field;
 }
 
-function createBorder(y,x,position,line){
+function createBorder(field, y,x,position,line){
 	for (let i = -1; i < 2; i++){
 		if (position === 0) {
 			if (y+i >= 0 && y+i < number && x-1>=0) {
@@ -129,16 +136,22 @@ function createBorder(y,x,position,line){
 			}
 		}
 	}
+	return field;
 }	
 
-function renderShip(cell,position, line){
-	let fieldCell = document.querySelectorAll('.field__container .field_cell');
+function renderShip(cell, position, line, chooseField){
+	let fieldCell
+	if (chooseField === 1) {
+		fieldCell = document.querySelectorAll('.game__own .field__cell');
+	}else{
+		fieldCell = document.querySelectorAll('.game__opponent .field__cell');
+	}
+	
 	let ship = document.createElement('div');
-	ship.className = 'ship';
-
-
 	let width = (position === 0) ? 40*line+2 : 42;
 	let height = (position === 1) ? 40*line+2 : 42;
+	
+	ship.className = 'ship';
 	ship.style.width = width + 'px';
 	ship.style.height = height + 'px';
 	fieldCell[cell].append(ship);
@@ -153,7 +166,6 @@ function randomPosition(array){
 }
 
 function bot(){
-
 	if (availableFields.length === 0) {
 		console.log('Нету свободных ячеек');
 		return;
@@ -174,25 +186,17 @@ function bot(){
 	}
 
 	//удаляем эту ячейку
-	/*console.log("availableFields", availableFields);
-	console.log("availableFields.length", availableFields.length);
-	console.log("position", position);
-	console.log("cell", cell);*/
 	availableFields.splice(position, 1);
-	//console.log("availableFields", availableFields);
 
-	//если ячейка мимо
-	if (field[column][row] === 1 || field[column][row] === 2) {
-		let fieldCell = document.querySelectorAll('.field__container .field_cell');
+	//если выстрел мимо
+	if (field_own[column][row] === 1 || field_own[column][row] === 2) {
+		let fieldCell = document.querySelectorAll('.game__own .field__cell');
 		fieldCell[cell].style.background = '#000000';
-		/*field[column][row] === -1 * field[column][row];*/
 		return;
 	}
 	//если ранил или убил
-	if (field[column][row] === 3) {
-		//let fieldCell = document.querySelectorAll('.field__container .field_cell');
-		/*fieldCell[cell].style.background = '#000000';*/
-		field[column][row] = -3;
+	if (field_own[column][row] === 3) {
+		field_own[column][row] = -3;
 		// запоминаем ячейку
 		memberPositions.push({y: column, x: row});
 		// определяем убил или ранил
@@ -242,9 +246,7 @@ function possibleSolution(){
 			tempPosition.push([memberPositions[0].x, memberPositions[0].y + 1]);
 		}
 	}
-
 	return tempPosition;
-
 }	
 
 function validPosition(x,y){
@@ -257,37 +259,24 @@ function validPosition(x,y){
 
 
 
-//
-function determineStateShip(x,y){
 
-	let flag = true;
+function determineStateShip(x,y){
+	let destroyShip = true;
 	for (let i = 0; i < memberPositions.length; i++){
-		console.log("memberPositions", memberPositions);
-		if (memberPositions[i].x - 1 >= 0 && field[memberPositions[i].y][memberPositions[i].x - 1] === 3) {
-			flag = false;
-			break;
-		}
-		if (memberPositions[i].x + 1 < number && field[memberPositions[i].y][memberPositions[i].x + 1] === 3) {
-			flag = false;
-			break;
-		}
-		if (memberPositions[i].y - 1 >= 0 && field[memberPositions[i].y - 1][memberPositions[i].x] === 3) {
-			flag = false;
-			break;
-		}
-		if (memberPositions[i].y + 1 < number && field[memberPositions[i].y + 1][memberPositions[i].x] === 3) {
-			flag = false;
+		let item = memberPositions[i];
+		if ( (item.x - 1 >= 0 && field_own[item.y][item.x - 1] === 3) || 
+			 (item.x + 1 < number && field_own[item.y][item.x + 1] === 3) || 
+			 (item.y - 1 >= 0 && field_own[item.y - 1][item.x] === 3) || 
+			 (item.y + 1 < number && field_own[item.y + 1][item.x] === 3) ) {
+			destroyShip = false;
 			break;
 		}
 	}
 
-	let fieldCell = document.querySelectorAll('.field__container .field_cell');
-	let cell = 10*y + x;
-	/*let cell = positionY * 10 + positionX;
-	let positionX = memberPositions[memberPositions.length-1].x;
-	let positionY = memberPositions[memberPositions.length-1].y;*/
+	let fieldCell = document.querySelectorAll('.game__own .field__cell'),
+		cell = 10*y + x;
 
-	if (flag === true) {
+	if (destroyShip === true) {
 		fieldCell[cell].style.background = '#ff0000';
 		fieldCell[cell].innerHTML = 'у';
 		freezeBorder();
@@ -302,42 +291,40 @@ function determineStateShip(x,y){
 	}
 }
 
-//
+function deleteField(x,y){
+	if (x >= 0 && x < number && y >= 0 && y < number){
+		if (availableFields.indexOf(y*10+x) !== -1) {
+			availableFields.splice(availableFields.indexOf(y*10+x), 1);
+		}
+		renderBorder(x, y);
+	}
+	
+}
+
+
+
 function freezeBorder(){
 	for (let i = 0; i < memberPositions.length; i++){
 		let x = memberPositions[i].x;
 		let y = memberPositions[i].y;
-		if (x-1 >= 0) {
-			/*renderBorder(x-1,y);*/
-			if (availableFields.indexOf(y*10+(x - 1)) !== -1) {
-				availableFields.splice( availableFields.indexOf(y*10+(x - 1)) ,1);
+
+		for (let i = -1; i <= 1 ;i++){
+			for (let j = -1; j <= 1; j++){
+				if (i === 0 && j === 0) {
+					continue;
+				}
+				deleteField(x + i, y + j);
 			}
-			renderBorder(x-1,y);
-		}
-		if (x+1 < number) {
-			if (availableFields.indexOf(y*10+(x + 1)) !== -1) {
-				availableFields.splice( availableFields.indexOf(y*10+(x + 1)), 1);
-			}
-			renderBorder(x+1,y);
-		}
-		if (y - 1 >= 0) {
-			if (availableFields.indexOf( (y-1)*10+x ) !== -1) {
-				availableFields.splice( availableFields.indexOf( (y-1)*10+x ), 1);
-			}
-			renderBorder(x,y-1);
-		}
-		if (y + 1 < number) {
-			if (availableFields.indexOf( (y+1)*10+x ) !== -1) {
-				availableFields.splice( availableFields.indexOf( (y+1)*10+x ), 1);
-			}
-			renderBorder(x,y+1);
 		}
 	}	
 }
 
 function renderBorder(x,y){
+	if (field_own[y][x] === -3) {
+		return;
+	}
 	let cell = 10*y + x;
-	let fieldCell = document.querySelectorAll('.field__container .field_cell');
+	let fieldCell = document.querySelectorAll('.game__own .field__cell');
 	fieldCell[cell].style.background = '#ab95f5';
 }
 
@@ -345,9 +332,7 @@ function renderBorder(x,y){
 
 
 
-/*function test(){
-	console.log(1);
-}*/
+
 
 /*let cross = document.createElement('div');
 cross.className = 'hit';

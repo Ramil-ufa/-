@@ -6,7 +6,8 @@ body{
 	display: block;
 	font-family: Tahoma, Verdana, sans-serif;
 	min-height: 100%;
-	background: url(../img/background.jpg)  #000000;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.6)), to(rgba(0, 0, 0, 0.7))), url(../img/background.jpg);
+	background-image: linear-gradient(top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('../img/background.jpg');
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size: cover;
@@ -53,9 +54,10 @@ body{
 	display: inline-block;
 	width: 200px;
 	margin: 0 50px;
-	overflow-x: hidden;
+	overflow: hidden;
 	text-overflow: ellipsis;
 	text-transform: lowercase;
+	white-space: nowrap;
 }
 .score__own::first-letter, .score__opponent::first-letter{
 	text-transform: uppercase;
@@ -116,9 +118,11 @@ body{
 .form__input:focus{
 	border-color: #1803ff;
 }
+.form__input_opponent{
+	margin-bottom: 50px;
+}
 .form__change,.form__start,.nav__continue,.nav__replay,.nav__exit{
 	display: block;
-	margin-top: 50px;
 	width: 100%;
 	background: #ffffff;
 	height: 40px;
@@ -301,4 +305,37 @@ body{
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
   }
+}
+
+@media (max-width: 1050px) {
+	body{
+		overflow-x: auto;
+	}
+	.header,.score,.message{
+		width: 500px;
+		min-width: auto;
+	}
+	.header,.message{
+		margin: 20px auto;
+		font-size: 20px;
+	}
+	.game{
+		width: 500px;
+		flex-direction: column;
+		align-items: center;
+	}
+	.form{
+		margin-top: 30px;
+		width: 100%;
+		text-align: center;
+	}
+	.form__start{
+		position: static;
+	}
+	.show_right, .show_left{
+		animation-duration: 0s;
+	}
+	.score__own, .score__opponent{
+		margin: 0;
+	}
 }

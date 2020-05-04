@@ -3,8 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Морской бой</title>
-	<link rel="stylesheet" href="css/style.css">
-	<script src="js/script.js" defer></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/style.min.css">
+	<script src="js/script.min.js" defer></script>
 </head>
 	<body>
 		<header class="header">
@@ -145,153 +146,19 @@
 			</div>
 			<div class="game__setting">
 				<div class="form">
-					<div class="form__title">Ваше имя</div>
-					<input type="text" class="form__input form__input_own" placeholder="Имя" maxlength="30" value="рамиль">
-					<div class="form__title form__title_top">Задайте имя компьютера</div>
-					<input type="text" class="form__input form__input_opponent" placeholder="Имя компьютера" maxlength="30" value="компьютер">
+					<div class="form__data">
+						<div class="form__title">Ваше имя</div>
+						<input type="text" class="form__input form__input_own" placeholder="Имя" maxlength="30">
+						<div class="form__title form__title_top">Задайте имя компьютера</div>
+						<input type="text" class="form__input form__input_opponent" placeholder="Имя компьютера" maxlength="30">
+					</div>
 					<button type="button" class="form__change">Поменять положение кораблей</button>
 					<button type="button" class="form__start">Начать игру</button>
 				</div>
 			</div>
-			<!-- <div class="game__opponent show_right">
-				<div class="field">
-					<div class="words field__word">
-						<div class="words__cell">A</div>
-						<div class="words__cell">Б</div>
-						<div class="words__cell">В</div>
-						<div class="words__cell">Г</div>
-						<div class="words__cell">Д</div>
-						<div class="words__cell">Е</div>
-						<div class="words__cell">Ж</div>
-						<div class="words__cell">З</div>
-						<div class="words__cell">И</div>
-						<div class="words__cell">К</div>
-					</div>
-					<div class="field__container">
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-						<div class="field__cell"></div>
-					</div>
-					<div class="numbers field__numbers">
-						<div class="numbers__cell">1</div>
-						<div class="numbers__cell">2</div>
-						<div class="numbers__cell">3</div>
-						<div class="numbers__cell">4</div>
-						<div class="numbers__cell">5</div>
-						<div class="numbers__cell">6</div>
-						<div class="numbers__cell">7</div>
-						<div class="numbers__cell">8</div>
-						<div class="numbers__cell">9</div>
-						<div class="numbers__cell">10</div>	
-					</div>
-				</div>
-			</div> -->
 		</div>
 		<div class="message"></div>
 	</body>
 </html>
 
 
-
-<!-- <nav class="nav">
- 	<button class="nav__continue" title="Сохранить результат и играть еще">Играть еще</button>
- 	<button class="nav__replay" title="Сохранить текущую позицию кораблей и переиграть">Переграть</button>
- 	<button class="nav__exit" title="Сбросить результат и выйти в меню">Выйти в меню</button>
- </nav>  --> 
